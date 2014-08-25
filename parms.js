@@ -111,6 +111,9 @@ var calculator = {};
 	
 	p.ex = 4250;
 	
+	//list filing statuses in order according to values in selector here for later reference
+	p.fsTranslator = ["single","mfj","hoh","mfs"]; 
+	
 	c.parms = p;
 	
 })(calculator);

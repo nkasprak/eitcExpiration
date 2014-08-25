@@ -11,11 +11,12 @@ $(document).ready(function() {
 		theInputs.numChildren = $("#children_input").val();
 		theInputs.filingStatus = $("#fs_input").val();
 		
-		results = calculator.findEitcChangeAmounts(theInputs);
+		eitcResults = calculator.findEitcChangeAmounts(theInputs);
+		ctcResults = calculator.findActcChangeAmounts(theInputs);
 		
-		$("span#result_thirdChildTier").html("$" + results.lossFromEndOfThirdChildTier);
-		$("span#result_marriagePenalty").html("$" + results.lossFromEndOfMPR);
-		
+		$("span#result_thirdChildTier").html("$" + eitcResults.lossFromEndOfThirdChildTier);
+		$("span#result_marriagePenalty").html("$" + eitcResults.lossFromEndOfMPR);
+		$("span#result_ctc").html("$" + ctcResults);
 		
 	});
 });
