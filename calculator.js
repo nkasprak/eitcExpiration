@@ -1,9 +1,9 @@
 // EITC calculator - 2018 expiration changes
 // by Nick Kasprak and Bryann DaSilva
 // CBPP
-
+var j=0;
 (function(c) {
-	c.eitcCalculator = function(theInputs, sConfig) { //Calculates EITC
+	c.eitcCalculator = function(theInputs, sConfig, smooth) { //Calculates EITC
 	
 		var child3Scenario, fs, gross_amount, kids, less_amount, parms, marriage_penalty_relief, 
 		mprScenario, wages, wages_rounded;
@@ -21,7 +21,8 @@
 		if (fs==3) return 0; 
 		
 		//Round off wages per IRS table
-		wages_rounded = (wages==0 ? 0 : Math.floor(wages/50)*50 + 25);
+		if (smooth == false) wages_rounded = (wages==0 ? 0 : Math.floor(wages/50)*50 + 25);
+		else wages_rounded = wages;
 		
 		//Pull in EITC parameters
 		parms = this.parms.eitc[kids];
@@ -35,12 +36,16 @@
 		//Minus phaseout amount
 		less_amount = Math.max(0,(wages_rounded - (parms.bp + marriage_penalty_relief))*parms.por);
 		
-		return Math.round(Math.max(0, gross_amount - less_amount),0);
+		return Math.max(0, gross_amount - less_amount);
 		
 	};
 	
-	c.findEitcChangeAmounts = function(theInputs) {
+	c.findEitcChangeAmounts = function(theInputs, smooth) {
 		
+		if (typeof smooth === "undefined") {
+			smooth = false;	
+		}
+	
 		//Calculate amount with full extension of ARRA first,
 		//then without marriage penalty relief, and then finally
 		//without the third child tier, and report the differences.
@@ -49,15 +54,15 @@
 			arraFullExtensionAmount: this.eitcCalculator(theInputs,{
 				thirdChild:"arra",
 				marriagePenaltyRelief:"arra"
-			}),
+			}, smooth),
 		 	amountWithNoMPR: this.eitcCalculator(theInputs,{
 				thirdChild:"arra",
 				marriagePenaltyRelief:"expiration"
-			}),
+			}, smooth),
 		 	amountWithNothing: this.eitcCalculator(theInputs,{
 				thirdChild:"expiration",
 				marriagePenaltyRelief:"expiration"
-			})
+			}, smooth)
 		};
 		
 		return {
@@ -102,11 +107,11 @@
 		maximumRefundablePortion = earnedIncomeOverThreshold*parms.r;
 		
 		//assume entire credit has to be refundable.
-		return Math.round(Math.min(maximumRefundablePortion,totalCTC));
-	}
+		return Math.min(maximumRefundablePortion,totalCTC);
+	};
 	
 	c.findActcChangeAmounts = function(theInputs) {
-		
+
 		//Same drill as before with EITC - calculate with ARRA, then without, report difference
 		var amounts = {
 			arraFullExtensionAmount:		this.actcCalculator(theInputs,"arra"),
@@ -115,5 +120,144 @@
 		
 		return amounts.arraFullExtensionAmount - amounts.amountWithHighCTCPhaseIn;
 	};
+	
+	//Recursively calculates at various points to isolate kinks in the graph
+	c.calcMarginalRate = function(theInputs,theCalculator, interval) {
+		var baseAmounts,nextAmounts,i,newInputs,marginalRates;
+		
+		baseAmounts = theCalculator.call(c,theInputs, true);
+		
+		newInputs = this.getInputsCopy(theInputs);
+		newInputs.wages = theInputs.wages+interval;
+		
+		nextAmounts = theCalculator.call(c,newInputs, true);
+		if (typeof(nextAmounts) === "object") {
+			marginalRates = {};
+			for (var key in nextAmounts) {
+				marginalRates[key] = (nextAmounts[key] - baseAmounts[key])/interval;
+			}
+		} else {
+			marginalRates = (nextAmounts - baseAmounts)/interval;	
+		}
+		
+		return marginalRates;
+	};
+	c.eitcMarginalRate = function(theInputs, interval) {
+		return c.calcMarginalRate(theInputs,this.findEitcChangeAmounts, interval);
+	}
+	c.ctcMarginalRate = function(theInputs, interval) {
+		return c.calcMarginalRate(theInputs,this.findActcChangeAmounts, interval);
+	};
+	c.marginalRate = function(theInputs, interval) {
+		return {
+			ctc: this.ctcMarginalRate(theInputs, interval),
+			eitc: this.eitcMarginalRate(theInputs, interval)
+		};
+	};
+	
+	c.getInputsCopy = function(theInputs) {
+		var newObject = {};
+		for (var i in theInputs) {
+			newObject[i] = theInputs[i];	
+		}
+		return newObject;
+	}
+	
+	c.findMarginalRatesChange = function(theInputs) {
+		
+		var baseUnit, power, listOfChangePoints, filingStatus, children, lowBound, highBound, recursiveLooper, checkRates;
+		
+		filingStatus = theInputs.filingStatus;
+		children = theInputs.numChildren;
+		lowBound = 0;
+		highBound = 60000;
+		baseUnit = 7;
+		basePower = 4;
+		listOfChangePoints = [];
+		
+		checkRates = function(oldRates, newRates) {
+			j++;
+			//if (j>100) sdf();
+			var toReturn = false;
+			var tolerance = 0.001;
+			var changes = [
+				oldRates.ctc - newRates.ctc,
+				oldRates.eitc.lossFromEndOfMPR - newRates.eitc.lossFromEndOfMPR,
+				oldRates.eitc.lossFromEndOfThirdChildTier - newRates.eitc.lossFromEndOfThirdChildTier
+			]
+			for (var i = 0;i<changes.length;i++) {
+				if (Math.abs(changes[i]) > tolerance) toReturn = true;
+			}
+			return toReturn;	
+		}
+		
+		recursiveLooper = function(power,startPoint) {
+			
+			var toDrillDown, step, oldMargRate, newMargRate,i;
+			var step = Math.pow(baseUnit,power);
+		
+			endPoint = startPoint + step*(baseUnit+1);
+			if (power == basePower) endPoint = highBound;
+			toDrillDown = [];
+			oldMargRate = this.marginalRate({wages:startPoint,numChildren:children,filingStatus:filingStatus},step);
+			for (var wages = startPoint + step; wages <=endPoint;wages = wages + step) {
+				
+				newMargRate = this.marginalRate({wages:wages,numChildren:children,filingStatus:filingStatus},step);
+				/*console.log(" ");
+				console.log("wages: " + wages);
+				console.log("step: " + step);
+				console.log("oldMargRate: ");
+				console.log(oldMargRate);
+				console.log("newMargRate: ");
+				console.log(newMargRate);*/
+				
+				if (checkRates(oldMargRate, newMargRate)) {
+					
+					//console.log("found something");
+					toDrillDown.push(wages - step);
+					
+				}
+				oldMargRate = this.marginalRate({wages:wages,numChildren:children,filingStatus:filingStatus},step);
+			}
+			for (i = 0; i<toDrillDown.length;i++) {
+				if (power > 0) {
+					recursiveLooper.call(c,power-1,toDrillDown[i]);
+				} else {
+					listOfChangePoints.push(toDrillDown	[i]);
+				}
+			}
+			
+		};
+		
+		recursiveLooper.call(c,basePower,lowBound);
+		
+		return listOfChangePoints;
+	};
+	
+
+	c.dataTableForChart = function(theInputs) {
+		var dataTable = [];
+		var toAdd = [];
+		var changePoints = this.findMarginalRatesChange(theInputs);
+		var results;
+		
+		for (var i = 0;i<changePoints.length;i++) {
+			toAdd.push(changePoints[i]+1);
+		}
+		changePoints = changePoints.concat(toAdd);
+		changePoints.push(0);
+		changePoints.sort(function(a,b) {return a-b;});
+		changePoints = changePoints.filter(function(elem, pos) {
+			return changePoints.indexOf(elem) == pos;
+		});
+		changePoints.sort(function(a,b) {return a-b;});
+		var newInputs = this.getInputsCopy(theInputs);
+		for (i=0;i<changePoints.length;i++) {
+			newInputs.wages = changePoints[i];
+			results = [c.findEitcChangeAmounts(newInputs,true),c.findActcChangeAmounts(newInputs)];
+			dataTable.push([changePoints[i],Math.round(results[0].lossFromEndOfMPR), Math.round(results[0].lossFromEndOfThirdChildTier), Math.round(results[1])]);
+		}
+		return dataTable;
+	}
 	
 })(calculator);
