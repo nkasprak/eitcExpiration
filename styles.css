@@ -2,18 +2,78 @@
 /* CSS Document */
 
 
-body {
-	font-family:Arial, Helvetica, sans-serif;	
+body, input, select {
+	font-family:'Droid Sans',Arial, Helvetica, sans-serif;	
 }
 
+
+
 .wrapper {
-	width:650px;	
+	max-width:650px;	
+	width:100%;
+	
+}
+
+#restWrapper {
+	font-size:12px;
+	margin:10px;
+	background-color:#eee;	
+	padding:10px;
+	box-shadow: 5px 5px 5px #ddd;
+}
+
+#inputsWrapper {
+	position:relative;	
+	float:left;
+	width:45%;
+	top:20px;
+}
+
+#outputsWrapper {
+	float:right;
+	margin-left:2%;
+	width:45%;
+}
+
+#outputsWrapper .legendLabel {
+	width:30px;
+	height:1em;	
+	margin-right:5px;
+	float:left;
+}
+
+#outputsWrapper .thirdChildTier .legendLabel {
+	background-color:#0c61a4	
+}
+
+#outputsWrapper .marriagePenalty .legendLabel {
+	background-color:#003768}
+
+#outputsWrapper .ctc .legendLabel {
+	background-color:#eb9123	
 }
 
 #chartSurrounder {
 	width:100%;	
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor:pointer;
 }
+
+
 
 #flotChart {
 	width:100%;	
+}
+
+@media (max-width:500px) {
+	#inputsWrapper, #outputsWrapper {
+		float:none;
+		width:100%;	
+		top:0px;
+	}
 }

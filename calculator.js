@@ -1,7 +1,7 @@
 // EITC calculator - 2018 expiration changes
 // by Nick Kasprak and Bryann DaSilva
 // CBPP
-var j=0;
+
 (function(c) {
 	c.eitcCalculator = function(theInputs, sConfig, smooth) { //Calculates EITC
 	
@@ -111,7 +111,6 @@ var j=0;
 	};
 	
 	c.findActcChangeAmounts = function(theInputs) {
-
 		//Same drill as before with EITC - calculate with ARRA, then without, report difference
 		var amounts = {
 			arraFullExtensionAmount:		this.actcCalculator(theInputs,"arra"),
@@ -123,7 +122,10 @@ var j=0;
 	
 	//Recursively calculates at various points to isolate kinks in the graph
 	c.calcMarginalRate = function(theInputs,theCalculator, interval) {
-		var baseAmounts,nextAmounts,i,newInputs,marginalRates;
+		
+		//Calculates the slope of a particular function (theCalculator) over an interval (interval)
+		
+		var baseAmounts,nextAmounts,i,key,newInputs,marginalRates;
 		
 		baseAmounts = theCalculator.call(c,theInputs, true);
 		
@@ -133,7 +135,7 @@ var j=0;
 		nextAmounts = theCalculator.call(c,newInputs, true);
 		if (typeof(nextAmounts) === "object") {
 			marginalRates = {};
-			for (var key in nextAmounts) {
+			for (key in nextAmounts) {
 				marginalRates[key] = (nextAmounts[key] - baseAmounts[key])/interval;
 			}
 		} else {
@@ -176,10 +178,8 @@ var j=0;
 		listOfChangePoints = [];
 		
 		checkRates = function(oldRates, newRates) {
-			j++;
-			//if (j>100) sdf();
 			var toReturn = false;
-			var tolerance = 0.001;
+			var tolerance = 0.00001;
 			var changes = [
 				oldRates.ctc - newRates.ctc,
 				oldRates.eitc.lossFromEndOfMPR - newRates.eitc.lossFromEndOfMPR,
