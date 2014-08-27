@@ -104,9 +104,7 @@ var calcInterface = {
 			calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
 		}
 		
-		calcInterface.theChart.bind("plothover",this.plotHoverFunction);
 		
-		calcInterface.theChart.bind("plotclick",this.plotClickFunction);
 	
 	},
 	updateWageAmount: function(wages) {
@@ -141,6 +139,8 @@ $(document).ready(function() {
 	
 	calcInterface.theChart = $("#flotChart");
 	calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+	calcInterface.theChart.bind("plothover",calcInterface.plotHoverFunction);
+	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
 	$(window).on("mousedown",function(e) {
 		calcInterface.mouseIsDown = true;
