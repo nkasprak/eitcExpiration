@@ -119,6 +119,11 @@ var calculator = {};
 		else return "$" + calcInterface.addCommas(val);	
 	};
 	
+	p.tickFormatFunctionK = function(val) {
+		if (val<0) return "-$" + calcInterface.addCommas(Math.abs(val/1000)) + "K";
+		else return "$" + calcInterface.addCommas(val/1000) + "K";	
+	};
+	
 	p.chartOptions = {
 		series: {
 			lines: {
@@ -162,7 +167,7 @@ var calculator = {};
 			color:"#444",
 			ticks:5,
 			tickColor:"#444",
-			tickFormatter:p.tickFormatFunction,
+			tickFormatter:p.tickFormatFunctionK,
 			axisLabel: "Household Wage Income"
 		},
 		
