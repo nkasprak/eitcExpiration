@@ -162,7 +162,28 @@ $(document).ready(function() {
 	
 	$("table#inputs select").change(function() {
 		calcInterface.updateChart();
-		
+	});
+	
+	$("table#inputs select#children_input").change(function() {
+		if ($(this).val() > 0) {
+			if ($("table#inputs select#fs_input").val() == 0) {
+				$("table#inputs select#fs_input").val(2);	
+			}
+			$("table#inputs select#fs_input").children("option").first().attr("disabled","disabled");
+		} else {
+			$("table#inputs select#fs_input").children("option").first().removeAttr("disabled");
+			if ($("table#inputs select#fs_input").val() == 2) {
+				$("table#inputs select#fs_input").val(0);	
+			}
+		}
+	});
+	
+	$("table#inputs select#fs_input").change(function() {
+		if ($(this).val() == 2) {
+			if ($("table#inputs select#children_input").val() == 0) {
+				$("table#inputs select#children_input").val(1);	
+			}
+		}
 	});
 	
 	$("#children_input").trigger("change");
