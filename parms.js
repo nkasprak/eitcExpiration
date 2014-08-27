@@ -114,6 +114,82 @@ var calculator = {};
 	//list filing statuses in order according to values in selector here for later reference
 	p.fsTranslator = ["single","mfj","hoh","mfs"]; 
 	
+	p.tickFormatFunction = function(val) {
+		if (val<0) return "-$" + calcInterface.addCommas(Math.abs(val));
+		else return "$" + calcInterface.addCommas(val);	
+	};
+	
+	p.chartOptions = {
+		series: {
+			lines: {
+				show:	true,
+				fill: 0.8,
+				lineWidth: 0
+			},
+			stack: true
+			
+		},
+		
+		grid: {
+			show: true,
+			hoverable: true,
+			autoHighlight: false,
+			clickable: true,
+			borderWidth:0,
+			markings: [
+				{
+					color: "#000",
+					lineWidth: 2,
+					yaxis: { from: 0, to: 0}
+				},
+				{
+					color: "#000",
+					lineWidth: 2,
+					xaxis: { from: 0, to: 0}
+				}
+			],
+		},
+		
+		axisLabels: {
+			show: true
+		},
+		
+		xaxis: {
+			min:0,
+			max:57000	,
+			tickLength:10,
+			position:"top",
+			color:"#444",
+			ticks:5,
+			tickColor:"#444",
+			tickFormatter:p.tickFormatFunction,
+			axisLabel: "Household Wage Income"
+		},
+		
+		yaxis: {
+			min:-3000,
+			max:0,
+			tickLength:10,
+			color:"#444",
+			tickColor:"#444"	,
+			tickFormatter:p.tickFormatFunction,
+			axisLabel: "Loss in Benefits"
+		},
+		
+		legend: {
+			position: "se"	,
+			labelBoxBorderColor:"#fff",
+			show:false
+		},
+		
+		colors: [
+			"#eb9123",	
+			"#0c61a4",
+			"#003768"
+		],
+		
+	}
+	
 	c.parms = p;
 	
 })(calculator);

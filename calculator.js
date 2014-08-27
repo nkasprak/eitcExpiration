@@ -74,7 +74,7 @@
 	c.actcCalculator = function(theInputs, scenario) { //Calculates additional CTC
 		
 		var agi, children, earnedIncomeOverThreshold, exemption, filingStatus, maximumRefundablePortion, parms, 
-		phaseoutLoss, phaseoutThreshold, overPhaseout, standardDeduction, totalCTC;
+		phaseoutLoss, phaseoutThreshold, overPhaseout, standardDeduction, wages, totalCTC;
 		
 		//Pull in inputs
 		children = theInputs.numChildren;
@@ -120,19 +120,24 @@
 		return amounts.arraFullExtensionAmount - amounts.amountWithHighCTCPhaseIn;
 	};
 	
-	//Recursively calculates at various points to isolate kinks in the graph
+	//Calculates the slope of a particular function (theCalculator) over an interval (interval)
 	c.calcMarginalRate = function(theInputs,theCalculator, interval) {
-		
-		//Calculates the slope of a particular function (theCalculator) over an interval (interval)
 		
 		var baseAmounts,nextAmounts,i,key,newInputs,marginalRates;
 		
+		//Start of interval
 		baseAmounts = theCalculator.call(c,theInputs, true);
 		
+		//Make copy of inputs object
 		newInputs = this.getInputsCopy(theInputs);
+		
+		//Increase wage input by interval amount
 		newInputs.wages = theInputs.wages+interval;
 		
+		//End of interval
 		nextAmounts = theCalculator.call(c,newInputs, true);
+		
+		//Calculate slope
 		if (typeof(nextAmounts) === "object") {
 			marginalRates = {};
 			for (key in nextAmounts) {
@@ -144,12 +149,16 @@
 		
 		return marginalRates;
 	};
+	
+	//Wrappers to call above function with different calculators
 	c.eitcMarginalRate = function(theInputs, interval) {
 		return c.calcMarginalRate(theInputs,this.findEitcChangeAmounts, interval);
 	}
 	c.ctcMarginalRate = function(theInputs, interval) {
 		return c.calcMarginalRate(theInputs,this.findActcChangeAmounts, interval);
 	};
+	
+	//Get marginal changes of all three functions (the two EITC ones and the CTC)
 	c.marginalRate = function(theInputs, interval) {
 		return {
 			ctc: this.ctcMarginalRate(theInputs, interval),
@@ -157,17 +166,20 @@
 		};
 	};
 	
+	//Makes copy of inputs object, so we can calculate marginal changes without changing it
 	c.getInputsCopy = function(theInputs) {
-		var newObject = {};
-		for (var i in theInputs) {
+		var newObject, i;
+		newObject = {};
+		for (i in theInputs) {
 			newObject[i] = theInputs[i];	
 		}
 		return newObject;
 	}
 	
+	//Recursively calculates at various points to isolate kinks in the graph
 	c.findMarginalRatesChange = function(theInputs) {
 		
-		var baseUnit, power, listOfChangePoints, filingStatus, children, lowBound, highBound, recursiveLooper, checkRates;
+		var baseUnit, basePower, listOfChangePoints, filingStatus, children, lowBound, highBound, recursiveLooper, checkRates;
 		
 		filingStatus = theInputs.filingStatus;
 		children = theInputs.numChildren;
@@ -178,14 +190,15 @@
 		listOfChangePoints = [];
 		
 		checkRates = function(oldRates, newRates) {
-			var toReturn = false;
-			var tolerance = 0.00001;
-			var changes = [
+			var toReturn, tolerance, changes, i;
+			toReturn = false;
+			tolerance = 0.00001;
+			changes = [
 				oldRates.ctc - newRates.ctc,
 				oldRates.eitc.lossFromEndOfMPR - newRates.eitc.lossFromEndOfMPR,
 				oldRates.eitc.lossFromEndOfThirdChildTier - newRates.eitc.lossFromEndOfThirdChildTier
 			]
-			for (var i = 0;i<changes.length;i++) {
+			for (i = 0;i<changes.length;i++) {
 				if (Math.abs(changes[i]) > tolerance) toReturn = true;
 			}
 			return toReturn;	
@@ -193,29 +206,19 @@
 		
 		recursiveLooper = function(power,startPoint) {
 			
-			var toDrillDown, step, oldMargRate, newMargRate,i;
-			var step = Math.pow(baseUnit,power);
+			var endPoint, toDrillDown, step, oldMargRate, newMargRate,i,wages;
+			step = Math.pow(baseUnit,power);
 		
 			endPoint = startPoint + step*(baseUnit+1);
 			if (power == basePower) endPoint = highBound;
 			toDrillDown = [];
 			oldMargRate = this.marginalRate({wages:startPoint,numChildren:children,filingStatus:filingStatus},step);
-			for (var wages = startPoint + step; wages <=endPoint;wages = wages + step) {
+			for (wages = startPoint + step; wages <=endPoint;wages = wages + step) {
 				
 				newMargRate = this.marginalRate({wages:wages,numChildren:children,filingStatus:filingStatus},step);
-				/*console.log(" ");
-				console.log("wages: " + wages);
-				console.log("step: " + step);
-				console.log("oldMargRate: ");
-				console.log(oldMargRate);
-				console.log("newMargRate: ");
-				console.log(newMargRate);*/
 				
 				if (checkRates(oldMargRate, newMargRate)) {
-					
-					//console.log("found something");
 					toDrillDown.push(wages - step);
-					
 				}
 				oldMargRate = this.marginalRate({wages:wages,numChildren:children,filingStatus:filingStatus},step);
 			}
@@ -233,15 +236,14 @@
 		
 		return listOfChangePoints;
 	};
-	
 
 	c.dataTableForChart = function(theInputs) {
-		var dataTable = [];
-		var toAdd = [];
-		var changePoints = this.findMarginalRatesChange(theInputs);
-		var results;
+		var dataTable, toAdd, changePoints, i, newInputs, results;
+		dataTable = [];
+		toAdd = [];
+		changePoints = this.findMarginalRatesChange(theInputs);
 		
-		for (var i = 0;i<changePoints.length;i++) {
+		for (i = 0;i<changePoints.length;i++) {
 			toAdd.push(changePoints[i]+1);
 		}
 		changePoints = changePoints.concat(toAdd);
@@ -251,7 +253,7 @@
 			return changePoints.indexOf(elem) == pos;
 		});
 		changePoints.sort(function(a,b) {return a-b;});
-		var newInputs = this.getInputsCopy(theInputs);
+		newInputs = this.getInputsCopy(theInputs);
 		for (i=0;i<changePoints.length;i++) {
 			newInputs.wages = changePoints[i];
 			results = [c.findEitcChangeAmounts(newInputs,true),c.findActcChangeAmounts(newInputs)];
