@@ -170,11 +170,13 @@ $(document).ready(function() {
 				$("table#inputs select#fs_input").val(2);	
 			}
 			$("table#inputs select#fs_input").children("option").first().attr("disabled","disabled");
+			$("table#inputs select#fs_input").children("option").eq(2).removeAttr("disabled");
 		} else {
-			$("table#inputs select#fs_input").children("option").first().removeAttr("disabled");
 			if ($("table#inputs select#fs_input").val() == 2) {
 				$("table#inputs select#fs_input").val(0);	
 			}
+			$("table#inputs select#fs_input").children("option").first().removeAttr("disabled");
+			$("table#inputs select#fs_input").children("option").eq(2).attr("disabled","disabled");
 		}
 	});
 	
