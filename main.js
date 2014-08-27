@@ -190,9 +190,11 @@ $(document).ready(function() {
 	
 	$("#children_input").trigger("change");
 	calcInterface.updateWageAmount($("#wage_input").val());
+	$(window).trigger("resize");
 	
 	$(window).resize(function() {
 		calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/20,12) + "px");
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
 	});

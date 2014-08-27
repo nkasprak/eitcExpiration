@@ -3,13 +3,14 @@
 
 
 body, input, select {
-	font-family:'Droid Sans',Arial, Helvetica, sans-serif;	
+	font-family:'Droid Sans',Arial, Helvetica, sans-serif;
 }
 
 
 
 .wrapper {
-	max-width:650px;	
+	max-width:650px;
+	min-width:400px;	
 	width:100%;
 	
 }
@@ -73,7 +74,12 @@ body, input, select {
 @media (max-width:500px) {
 	#inputsWrapper, #outputsWrapper {
 		float:none;
-		width:100%;	
+		width:80%;
+		margin-left:auto;
+		margin-right:auto;	
 		top:0px;
+	}
+	#inputsWrapper table, #outputsWrapper table{
+		width:100%;
 	}
 }
