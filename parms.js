@@ -191,11 +191,11 @@ var calculator = {};
 			show:false
 		},
 		
-		colors: [
+		/*colors: [
 			"#eb9123",	
 			"#0c61a4",
 			"#003768"
-		]
+		]*/
 		
 	}
 	

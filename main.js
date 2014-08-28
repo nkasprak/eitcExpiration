@@ -213,7 +213,6 @@ var calcInterface = {
 			newYmin = Math.min(newYmin, d[0].data[i][1] + d[1].data[i][1] + d[2].data[i][1]);
 		}
 		if (d[0].data.length==1) {
-			console.log("nothing!");
 			newXmax =	 22000;
 			newYmin = -1000;
 		}
@@ -223,7 +222,7 @@ var calcInterface = {
 	updateWageAmount: function(wages) {
 		calcInterface.setInput("wage_input",wages);
 		calcInterface.thePlot.getOptions().grid.markings[2] = {
-			color: "#b9292f",
+			color: "#0081a4",
 			lineWidth: 2,
 			xaxis: { from: wages, to: wages}
 		};
@@ -255,6 +254,11 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 	calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+	
+	calculator.parms.chartOptions.colors = [];
+	calculator.parms.chartOptions.colors[1] = $("#outputsWrapper .thirdChildTier .legendLabel").css("backgroundColor");
+	calculator.parms.chartOptions.colors[2] = $("#outputsWrapper .marriagePenalty .legendLabel").css("backgroundColor");
+	calculator.parms.chartOptions.colors[0] = $("#outputsWrapper .ctc .legendLabel").css("backgroundColor");
 	
 	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
