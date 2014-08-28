@@ -119,6 +119,10 @@ var calculator = {};
 		else return "$" + calcInterface.addCommas(val);	
 	};
 	
+	p.variableChartAxes = true;
+	p.animateAxes = true;
+	p.maintainAspectRatio = true;
+	
 	p.tickFormatFunctionK = function(val) {
 		if (val<0) return "-$" + calcInterface.addCommas(Math.abs(val/1000)) + "K";
 		else return "$" + calcInterface.addCommas(val/1000) + "K";	

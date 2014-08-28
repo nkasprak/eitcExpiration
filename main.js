@@ -111,20 +111,26 @@ var calcInterface = {
 		}
 		
 		calcInterface.chartData = dataObj;
-		if (typeof(calcInterface.thePlot)=="undefined") {
+		if (typeof(calcInterface.thePlot)=="undefined" || (calculator.parms.variableChartAxes == true && calculator.parms.animateAxes == false)) {
 			range = calcInterface.getRange(calcInterface.chartData);
 			calculator.parms.chartOptions.xaxis.max = range.newXmax;
 			calculator.parms.chartOptions.yaxis.min = range.newYmin;
 			calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
+			calcInterface.updateWageAmount(theInputs.wages);
 		} else {
-			calcInterface.animateChart(300,calcInterface.updateWageAmount,theInputs.wages);	
+			if (calculator.parms.animateAxes == true) {
+				calcInterface.animateChart(300,calcInterface.updateWageAmount,theInputs.wages);
+			}
+			else {
+				calcInterface.thePlot.setData(calcInterface.chartData);
+				calcInterface.thePlot.draw();
+				calcInterface.updateWageAmount(theInputs.wages);
+			}
 		}
-		
-		//calcInterface.updateWageAmount(theInputs.wages);
-	
 	},
 	
 	animateChart: function(length,callback, args) {
+		var xChange, yChange, percentChange;
 		var axes = calcInterface.thePlot.getAxes();
 		if (typeof(calcInterface.animation)==="undefined") {
 			calcInterface.animation = {};	
@@ -132,12 +138,23 @@ var calcInterface = {
 		
 		var range = calcInterface.getRange(calcInterface.chartData);
 		
+		if (calculator.parms.maintainAspectRatio == true) {
+			xChange = 1+(range.newXmax - axes.xaxis.max)/axes.xaxis.max;
+			yChange = 1+(range.newYmin - axes.yaxis.min)/axes.yaxis.min;
+			percentChange = Math.max(xChange,yChange);
+			newXmax = axes.xaxis.max*percentChange;
+			newYmin = axes.yaxis.min*percentChange;
+		} else {
+			newXmax = range.newXmax;
+			newYmin = range.newYmin;
+		}
+		
 		calcInterface.animation = {
 			animationFrame:0,
 			oldYMin: axes.yaxis.min,
 			oldXMax: axes.xaxis.max,
-			newXMax: range.newXmax,
-			newYMin: range.newYmin,
+			newXMax: newXmax,
+			newYMin: newYmin,
 			length: length,
 			numFrames: length/30,
 			onCompleteFunction: callback,
@@ -271,5 +288,33 @@ $(document).ready(function() {
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
 	});
+	
+	$("#animationMode").change(function() {
+		var p = calculator.parms;
+		p.animateAxes = false;
+		p.variableChartAxes = true;
+		p.maintainAspectRatio = false;
+		$("#children_input").val(3);
+		$("#fs_input").val(1);
+		$("#children_input").trigger("change");
+		var val = $(this).val();
+		switch (val) {
+			case "static":
+				p.variableChartAxes = false;
+				p.animateAxes = false;
+			break;
+			case "free":
+				p.variableChartAxes = true;
+				p.animateAxes = true;
+				p.maintainAspectRatio = false;
+			break;
+			case "fixed":
+				p.variableChartAxes = true;
+				p.animateAxes = true;
+				p.maintainAspectRatio = true;
+			break;
+		}
+	});
+	$("#animationMode").trigger("change");
 	
 });
