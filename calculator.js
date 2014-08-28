@@ -114,7 +114,7 @@
 		//Same drill as before with EITC - calculate with ARRA, then without, report difference
 		var amounts = {
 			arraFullExtensionAmount:		this.actcCalculator(theInputs,"arra"),
-			amountWithHighCTCPhaseIn:	this.actcCalculator(theInputs,"expiration"),
+			amountWithHighCTCPhaseIn:	this.actcCalculator(theInputs,"expiration")
 		}
 		
 		return amounts.arraFullExtensionAmount - amounts.amountWithHighCTCPhaseIn;

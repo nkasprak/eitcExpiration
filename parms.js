@@ -152,7 +152,7 @@ var calculator = {};
 					lineWidth: 2,
 					xaxis: { from: 0, to: 0}
 				}
-			],
+			]
 		},
 		
 		axisLabels: {
@@ -191,7 +191,7 @@ var calculator = {};
 			"#eb9123",	
 			"#0c61a4",
 			"#003768"
-		],
+		]
 		
 	}
 	

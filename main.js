@@ -145,21 +145,24 @@ var calcInterface = {
 		$("span#result_marriagePenalty").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfMPR)));
 		$("span#result_ctc").html("-$" + calcInterface.addCommas(Math.round(ctcResults)));
 		$("span#result_total").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfThirdChildTier + eitcResults.lossFromEndOfMPR + ctcResults)));
-	},
+	}
 };
 
 
 $(document).ready(function() {
 	
 	calcInterface.theChart = $("#flotChart");
+	calcInterface.theChart.find().addBack().on("selectstart",function(e) {
+		e.preventDefault();
+	});
 	calcInterface.theChart.css("height",0.6*$("#flotChart").width());
 	calcInterface.theChart.bind("plothover",calcInterface.plotHoverFunction);
 	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
-	$(window).on("mousedown",function(e) {
+	$(document).on("mousedown",function(e) {
 		calcInterface.mouseIsDown = true;
 	});
-	$(window).on("mouseup",function(e) {
+	$(document).on("mouseup",function(e) {
 		calcInterface.mouseIsDown = false;
 	});
 	
