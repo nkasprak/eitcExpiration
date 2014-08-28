@@ -37,7 +37,7 @@ var calcInterface = {
 	plotHoverFunction: function(event, pos, item) {
 		if (calcInterface.mouseIsDown) {
 			var wages, data, i, theInputs, newYs, xArr, maxWage;
-			wages = Math.round(pos.x);
+			wages = Math.max(0,Math.round(pos.x));
 			data = calcInterface.chartData;
 			
 			//remove the previous custom point
@@ -141,10 +141,10 @@ var calcInterface = {
 		eitcResults = calculator.findEitcChangeAmounts(theInputs);
 		ctcResults = calculator.findActcChangeAmounts(theInputs);
 		
-		$("span#result_thirdChildTier").html("-$" + Math.round(eitcResults.lossFromEndOfThirdChildTier));
-		$("span#result_marriagePenalty").html("-$" + Math.round(eitcResults.lossFromEndOfMPR));
-		$("span#result_ctc").html("-$" + Math.round(ctcResults));
-		$("span#result_total").html("-$" + Math.round(eitcResults.lossFromEndOfThirdChildTier + eitcResults.lossFromEndOfMPR + ctcResults));
+		$("span#result_thirdChildTier").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfThirdChildTier)));
+		$("span#result_marriagePenalty").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfMPR)));
+		$("span#result_ctc").html("-$" + calcInterface.addCommas(Math.round(ctcResults)));
+		$("span#result_total").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfThirdChildTier + eitcResults.lossFromEndOfMPR + ctcResults)));
 	},
 };
 
