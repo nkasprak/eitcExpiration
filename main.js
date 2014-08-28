@@ -140,7 +140,7 @@ var calcInterface = {
 	},
 	
 	animateChart: function(length,callback, args) {
-		var xChange, yChange, percentChange;
+		var xChange, yChange, percentChange, newXmax, newYmin;
 		var axes = calcInterface.thePlot.getAxes();
 		if (typeof(calcInterface.animation)==="undefined") {
 			calcInterface.animation = {};	
@@ -207,10 +207,15 @@ var calcInterface = {
 	},
 	
 	getRange: function(d) {
-		var i, newXmax=0;newYmin=0;
+		var i, newXmax=0,newYmin=0;
 		for (i=0;i<d[0].data.length;i++) {
 			newXmax = Math.max(newXmax, d[0].data[i][0]);
 			newYmin = Math.min(newYmin, d[0].data[i][1] + d[1].data[i][1] + d[2].data[i][1]);
+		}
+		if (d[0].data.length==1) {
+			console.log("nothing!");
+			newXmax =	 22000;
+			newYmin = -1000;
 		}
 		return {newXmax: newXmax,newYmin: newYmin};	
 	},
