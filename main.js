@@ -255,13 +255,15 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 	calcInterface.theChart.css("height",0.6*$("#flotChart").width());
-	calcInterface.theChart.bind("plothover",calcInterface.plotHoverFunction);
+	
 	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
 	$(document).on("mousedown",function(e) {
+		calcInterface.theChart.bind("plothover",calcInterface.plotHoverFunction);
 		calcInterface.mouseIsDown = true;
 	});
 	$(document).on("mouseup",function(e) {
+		calcInterface.theChart.unbind("plothover",calcInterface.plotHoverFunction);
 		calcInterface.mouseIsDown = false;
 	});
 	
