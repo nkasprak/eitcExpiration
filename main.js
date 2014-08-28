@@ -139,7 +139,7 @@ var calcInterface = {
 			newXMax: range.newXmax,
 			newYMin: range.newYmin,
 			length: length,
-			numFrames: length/10,
+			numFrames: length/30,
 			onCompleteFunction: callback,
 			onCompleteArgs: args
 		}
