@@ -35,6 +35,7 @@ var calcInterface = {
 		return x1 + x2;
 	},
 	plotHoverFunction: function(event, pos, item) {
+		if (calcInterface.isAnimating()) return false;
 		if (calcInterface.mouseIsDown) {
 			var wages, data, i, theInputs, newYs, xArr, maxWage;
 			wages = Math.max(0,Math.round(pos.x));
@@ -82,8 +83,17 @@ var calcInterface = {
 		}	
 	},
 	plotClickFunction: function(event, pos, item) {
+		if (calcInterface.isAnimating() == true) return false;
 		var wages = Math.round(pos.x);
 		calcInterface.updateWageAmount(wages);
+	},
+	isAnimating: function() {
+		if (this.animation) {
+			if (this.animation.active==true) {
+				return true;	
+			}
+		}
+		return false;
 	},
 	updateChart: function() {
 		var i,j,thePoint,use,theInputs,rawData,theData,dataObj,range;
@@ -119,7 +129,7 @@ var calcInterface = {
 			calcInterface.updateWageAmount(theInputs.wages);
 		} else {
 			if (calculator.parms.animateAxes == true) {
-				calcInterface.animateChart(300,calcInterface.updateWageAmount,theInputs.wages);
+				calcInterface.animateChart(600,calcInterface.updateWageAmount,theInputs.wages);
 			}
 			else {
 				calcInterface.thePlot.setData(calcInterface.chartData);
@@ -150,6 +160,7 @@ var calcInterface = {
 		}
 		
 		calcInterface.animation = {
+			active:true,
 			animationFrame:0,
 			oldYMin: axes.yaxis.min,
 			oldXMax: axes.xaxis.max,
@@ -158,8 +169,15 @@ var calcInterface = {
 			length: length,
 			numFrames: length/30,
 			onCompleteFunction: callback,
-			onCompleteArgs: args
+			onCompleteArgs: args,
+			easing: function(x) {
+				function ease1(x) {
+					return  (1-Math.cos(x*Math.PI))/2;
+				}
+				return ease1(ease1(x));
+			}
 		}
+		$(calcInterface.theChart).css("cursor","default");
 		calcInterface.thePlot.setData(calcInterface.chartData);
 		axes.yaxis.min = calcInterface.animation.oldYMin;
 		axes.xaxis.max = calcInterface.animation.oldXMax;
@@ -167,20 +185,23 @@ var calcInterface = {
 		calcInterface.thePlot.draw();
 		setTimeout(function() {
 			calcInterface.animation.animationTimer = setInterval(calcInterface.chartFrame,30)
-		},200);
+		},50);
 	},
 	
 	chartFrame: function() {
 		var a = calcInterface.animation;
-		var percentDone = a.animationFrame/a.numFrames;
+		var percentDone = a.easing(a.animationFrame/a.numFrames);
 		var yMin = a.oldYMin + percentDone*(a.newYMin - a.oldYMin);
 		var xMax = a.oldXMax + percentDone*(a.newXMax - a.oldXMax);
 		calculator.parms.chartOptions.xaxis.max = xMax;
 		calculator.parms.chartOptions.yaxis.min = yMin;
 		calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
+		
 		a.animationFrame++;
 		if (a.animationFrame > a.numFrames) {
 			clearTimeout(a.animationTimer);
+			a.active = false;
+			$(calcInterface.theChart).css("cursor","pointer");
 			a.onCompleteFunction(a.onCompleteArgs);	
 		}
 	},
