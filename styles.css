@@ -71,6 +71,10 @@ body, input, select {
 	width:100%;	
 }
 
+.axisLabels .yaxisLabel {
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	
+}
+
 @media (max-width:500px) {
 	#inputsWrapper, #outputsWrapper {
 		float:none;
