@@ -86,7 +86,7 @@ var calcInterface = {
 		calcInterface.updateWageAmount(wages);
 	},
 	updateChart: function() {
-		var i,j,thePoint,use,theInputs,rawData,theData,dataObj;
+		var i,j,thePoint,use,theInputs,rawData,theData,dataObj,range;
 		theInputs = calcInterface.getInputs();
 		rawData = calculator.dataTableForChart(theInputs);
 		
@@ -111,16 +111,72 @@ var calcInterface = {
 		}
 		
 		calcInterface.chartData = dataObj;
-		
-		if (typeof(calcInterface.thePlot==="undefined")) {
+		if (typeof(calcInterface.thePlot)=="undefined") {
+			range = calcInterface.getRange(calcInterface.chartData);
+			calculator.parms.chartOptions.xaxis.max = range.newXmax;
+			calculator.parms.chartOptions.yaxis.min = range.newYmin;
 			calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
+		} else {
+			calcInterface.animateChart(300,calcInterface.updateWageAmount,theInputs.wages);	
 		}
 		
-		calcInterface.updateWageAmount(theInputs.wages);
-		
-		
+		//calcInterface.updateWageAmount(theInputs.wages);
 	
 	},
+	
+	animateChart: function(length,callback, args) {
+		var axes = calcInterface.thePlot.getAxes();
+		if (typeof(calcInterface.animation)==="undefined") {
+			calcInterface.animation = {};	
+		}
+		
+		var range = calcInterface.getRange(calcInterface.chartData);
+		
+		calcInterface.animation = {
+			animationFrame:0,
+			oldYMin: axes.yaxis.min,
+			oldXMax: axes.xaxis.max,
+			newXMax: range.newXmax,
+			newYMin: range.newYmin,
+			length: length,
+			numFrames: length/10,
+			onCompleteFunction: callback,
+			onCompleteArgs: args
+		}
+		calcInterface.thePlot.setData(calcInterface.chartData);
+		axes.yaxis.min = calcInterface.animation.oldYMin;
+		axes.xaxis.max = calcInterface.animation.oldXMax;
+		calcInterface.thePlot.setupGrid();
+		calcInterface.thePlot.draw();
+		setTimeout(function() {
+			calcInterface.animation.animationTimer = setInterval(calcInterface.chartFrame,30)
+		},200);
+	},
+	
+	chartFrame: function() {
+		var a = calcInterface.animation;
+		var percentDone = a.animationFrame/a.numFrames;
+		var yMin = a.oldYMin + percentDone*(a.newYMin - a.oldYMin);
+		var xMax = a.oldXMax + percentDone*(a.newXMax - a.oldXMax);
+		calculator.parms.chartOptions.xaxis.max = xMax;
+		calculator.parms.chartOptions.yaxis.min = yMin;
+		calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
+		a.animationFrame++;
+		if (a.animationFrame > a.numFrames) {
+			clearTimeout(a.animationTimer);
+			a.onCompleteFunction(a.onCompleteArgs);	
+		}
+	},
+	
+	getRange: function(d) {
+		var i, newXmax=0;newYmin=0;
+		for (i=0;i<d[0].data.length;i++) {
+			newXmax = Math.max(newXmax, d[0].data[i][0]);
+			newYmin = Math.min(newYmin, d[0].data[i][1] + d[1].data[i][1] + d[2].data[i][1]);
+		}
+		return {newXmax: newXmax,newYmin: newYmin};	
+	},
+	
 	updateWageAmount: function(wages) {
 		calcInterface.setInput("wage_input",wages);
 		calcInterface.thePlot.getOptions().grid.markings[2] = {

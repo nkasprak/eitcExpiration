@@ -259,6 +259,6 @@
 			dataTable.push([changePoints[i],Math.round(results[0].lossFromEndOfMPR), Math.round(results[0].lossFromEndOfThirdChildTier), Math.round(results[1])]);
 		}
 		return dataTable;
-	}
+	};
 	
 })(calculator);
