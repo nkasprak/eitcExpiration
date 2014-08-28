@@ -238,11 +238,10 @@
 	};
 
 	c.dataTableForChart = function(theInputs) {
-		var dataTable, toAdd, changePoints, i, newInputs, results;
+		var dataTable, toAdd, changePoints, i, newInputs, results, maxWage;
 		dataTable = [];
 		toAdd = [];
 		changePoints = this.findMarginalRatesChange(theInputs);
-		
 		for (i = 0;i<changePoints.length;i++) {
 			toAdd.push(changePoints[i]+1);
 		}

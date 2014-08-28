@@ -36,7 +36,7 @@ var calcInterface = {
 	},
 	plotHoverFunction: function(event, pos, item) {
 		if (calcInterface.mouseIsDown) {
-			var wages, data, i, theInputs, newYs;
+			var wages, data, i, theInputs, newYs, xArr, maxWage;
 			wages = Math.round(pos.x);
 			data = calcInterface.chartData;
 			
@@ -49,7 +49,19 @@ var calcInterface = {
 				}
 			}
 			
-			calcInterface.userPoint = wages;
+		
+			xArr = [];
+			for (i=0;i<data[0].data.length;i++) {
+				xArr.push(data[0].data[i][0]);
+			}
+			
+			maxWage = Math.max.apply(Math,xArr);
+			if (wages >= maxWage) {
+				wages = maxWage;
+				calcInterface.userPoint = null;
+			} else {
+				calcInterface.userPoint = wages;	
+			}
 			theInputs = calcInterface.getInputs();
 			theInputs.wages = wages;
 			newYs = {
@@ -103,6 +115,8 @@ var calcInterface = {
 		if (typeof(calcInterface.thePlot==="undefined")) {
 			calcInterface.thePlot = $.plot(calcInterface.theChart,calcInterface.chartData, calculator.parms.chartOptions);
 		}
+		
+		calcInterface.updateWageAmount(theInputs.wages);
 		
 		
 	

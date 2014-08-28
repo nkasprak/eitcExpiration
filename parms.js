@@ -161,7 +161,7 @@ var calculator = {};
 		
 		xaxis: {
 			min:0,
-			max:57000	,
+			/*max:57000	,*/
 			tickLength:10,
 			position:"top",
 			color:"#444",
@@ -172,13 +172,13 @@ var calculator = {};
 		},
 		
 		yaxis: {
-			min:-3000,
+			/*min:-3000,*/
 			max:0,
 			tickLength:10,
 			color:"#444",
 			tickColor:"#444"	,
 			tickFormatter:p.tickFormatFunction,
-			axisLabel: "Loss in Benefits"
+			axisLabel: "Loss in Credits"
 		},
 		
 		legend: {
