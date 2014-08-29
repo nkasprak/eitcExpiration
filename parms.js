@@ -189,7 +189,7 @@ var calculator = {};
 			position: "se"	,
 			labelBoxBorderColor:"#fff",
 			show:false
-		},
+		}
 		
 		/*colors: [
 			"#eb9123",	
