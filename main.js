@@ -222,7 +222,9 @@ var calcInterface = {
 	},
 	
 	updateWageAmount: function(wages) {
+		var theMax = calcInterface.thePlot.getAxes().xaxis.max;
 		if (wages < 0) wages = 0;
+		if (wages > theMax) wages = theMax;
 		calcInterface.setInput("wage_input",wages);
 		calcInterface.setLabelPosition(wages);
 		calcInterface.thePlot.setupGrid();
