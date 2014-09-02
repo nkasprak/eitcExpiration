@@ -226,20 +226,26 @@ var calcInterface = {
 		if (wages < 0) wages = 0;
 		if (wages > theMax) wages = theMax;
 		calcInterface.setInput("wage_input",wages);
-		calcInterface.setLabelPosition(wages);
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
-		calcInterface.changeInput();
+		var results = calcInterface.changeInput();
+		calcInterface.setLabelPosition(wages, results);
 	},
-	setLabelPosition: function(wages) {
+	setLabelPosition: function(wages,results) {
+		var bMarg = calculator.parms.bottomMargin;
 		var leftPercent = (calcInterface.thePlot.pointOffset({x:wages,y:0}).left)/calcInterface.theChart.width();
+		if (results) {
+			var total = results.eitcResults.lossFromEndOfMPR + results.eitcResults.lossFromEndOfThirdChildTier + results.ctcResults;
+			var yPoint = (calcInterface.thePlot.pointOffset({x:0,y:0-total}).top)/calcInterface.theChart.height();
+			$("#lossOverlay").css("top", yPoint*100/bMarg + "%");
+		}
 		var yZero = (calcInterface.thePlot.pointOffset({x:0,y:0}).top)/calcInterface.theChart.height();
-		$("#lineOverlay").css("top",yZero*100 + "%").css("height",(.98-yZero)*100 + "%").css("left",(leftPercent*100) + "%");
+		$("#lineOverlay").css("top",yZero*100/bMarg + "%").css("height",(.98-yZero)*100 + "%").css("left",(leftPercent*100) + "%");
 		$("#labelOverlay").css("width", (calcInterface.labelWidth*2) + "px");
 		if (leftPercent > 0.6) {
-			$("#labelOverlay").css("left","").css("textAlign","right").css("right",(1-leftPercent)*100 + "%");
+			$("#labelOverlay, #lossOverlay").css("left","").css("textAlign","right").css("right",(1-leftPercent)*100 + "%");
 		} else {
-			$("#labelOverlay").css("right","").css("textAlign","left").css("left",(leftPercent)*100 + "%");
+			$("#labelOverlay, #lossOverlay").css("right","").css("textAlign","left").css("left",(leftPercent)*100 + "%");
 		}
 	},
 	mouseIsDown: false,
@@ -255,6 +261,8 @@ var calcInterface = {
 		$("span#result_marriagePenalty").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfMPR)));
 		$("span#result_ctc").html("-$" + calcInterface.addCommas(Math.round(ctcResults)));
 		$("span#result_total").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfThirdChildTier + eitcResults.lossFromEndOfMPR + ctcResults)));
+		$("span#lossOverlayAmount").html("-$" + calcInterface.addCommas(Math.round(eitcResults.lossFromEndOfThirdChildTier + eitcResults.lossFromEndOfMPR + ctcResults)));
+		return {eitcResults: eitcResults, ctcResults: ctcResults};
 	}
 };
 
@@ -327,10 +335,21 @@ $(document).ready(function() {
 	
 	calcInterface.labelWidth = $("#labelOverlay").width();
 	
-	$(window).trigger("resize");
+	$("#lossOverlayAmount").on("mousemove", function(e) {
+		
+		var offset = $("#flotChart").offset();
+		var axes = calcInterface.thePlot.getAxes();
+		var pointOffset = calcInterface.thePlot.pointOffset({x:0,y:0});
+		var x = axes.xaxis.c2p(e.pageX - offset.left - pointOffset.left);
+		var y = axes.yaxis.c2p(e.pageY - offset.top - pointOffset.top);
+		calcInterface.plotHoverFunction(null,{x:x,y:y});
+	});
+	
+	
 	
 	$(window).resize(function() {
 		calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+		$("#chartSurrounder").height(calcInterface.theChart.height()*calculator.parms.bottomMargin);
 		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/20,12) + "px");
 		calcInterface.setLabelPosition($("#wage_input").val());
 		calcInterface.thePlot.setupGrid();
@@ -364,5 +383,6 @@ $(document).ready(function() {
 		}
 	});
 	$("#animationMode").trigger("change");
+	$(window).trigger("resize");
 	
 });

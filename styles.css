@@ -72,8 +72,24 @@ body, input, select {
 	font-weight:bold;
 	font-size:10px;
 	color:#0081a4;
-	bottom:2%;
+	bottom:3%;
 	width:auto;
+}
+
+#lossOverlay{
+	position:absolute;	
+}
+
+#lossOverlay .subDiv {
+	width:70px;
+	height:30px;
+	position:relative;
+	font-weight:bold;
+	font-size:12px;
+	color:#fff	;
+	opacity:0.4;
+	background-color:#000;
+	padding:5px;
 }
 
 #lineOverlay {
