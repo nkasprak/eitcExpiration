@@ -183,7 +183,7 @@ var calcInterface = {
 		axes.xaxis.max = calcInterface.animation.oldXMax;
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
-		$("#labelOverlay").hide();
+		$("#labelOverlay, #lineOverlay").hide();
 		setTimeout(function() {
 			calcInterface.animation.animationTimer = setInterval(calcInterface.chartFrame,30)
 		},50);
@@ -203,7 +203,7 @@ var calcInterface = {
 			clearTimeout(a.animationTimer);
 			a.active = false;
 			$(calcInterface.theChart).css("cursor","pointer");
-			$("#labelOverlay").show();
+			$("#labelOverlay, #lineOverlay").show();
 			a.onCompleteFunction(a.onCompleteArgs);	
 		}
 	},
@@ -222,12 +222,8 @@ var calcInterface = {
 	},
 	
 	updateWageAmount: function(wages) {
+		if (wages < 0) wages = 0;
 		calcInterface.setInput("wage_input",wages);
-		calcInterface.thePlot.getOptions().grid.markings[2] = {
-			color: "#0081a4",
-			lineWidth: 2,
-			xaxis: { from: wages, to: wages}
-		};
 		calcInterface.setLabelPosition(wages);
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
@@ -235,15 +231,13 @@ var calcInterface = {
 	},
 	setLabelPosition: function(wages) {
 		var leftPercent = (calcInterface.thePlot.pointOffset({x:wages,y:0}).left)/calcInterface.theChart.width();
+		var yZero = (calcInterface.thePlot.pointOffset({x:0,y:0}).top)/calcInterface.theChart.height();
+		$("#lineOverlay").css("top",yZero*100 + "%").css("height",(.98-yZero)*100 + "%").css("left",(leftPercent*100) + "%");
 		$("#labelOverlay").css("width", (calcInterface.labelWidth*2) + "px");
 		if (leftPercent > 0.6) {
-			$("#labelOverlay").css("left","");
-			$("#labelOverlay").css("textAlign","right");
-			$("#labelOverlay").css("right",(1-leftPercent)*100 + "%");
+			$("#labelOverlay").css("left","").css("textAlign","right").css("right",(1-leftPercent)*100 + "%");
 		} else {
-			$("#labelOverlay").css("right","");
-			$("#labelOverlay").css("textAlign","left");
-			$("#labelOverlay").css("left",(leftPercent)*100 + "%");
+			$("#labelOverlay").css("right","").css("textAlign","left").css("left",(leftPercent)*100 + "%");
 		}
 	},
 	mouseIsDown: false,

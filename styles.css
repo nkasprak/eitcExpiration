@@ -44,15 +44,15 @@ body, input, select {
 }
 
 #outputsWrapper .thirdChildTier .legendLabel {
-	background-color:#eb9123	
+	background-color:#efa74f	 
 }
 
 #outputsWrapper .marriagePenalty .legendLabel {
-	background-color:#af7024
+	background-color:#fed471
 }
 
 #outputsWrapper .ctc .legendLabel {
-	background-color:#b9292f	
+	background-color:#c75459	
 }
 
 #chartSurrounder {
@@ -76,6 +76,17 @@ body, input, select {
 	width:auto;
 }
 
+#lineOverlay {
+	position:absolute;
+	background-color:#0081a4;
+	width:2px;
+	height:100%;
+	top:0px;
+}
+
+#animationModeArea {
+	display:none;	
+}
 
 #flotChart {
 	width:100%;	

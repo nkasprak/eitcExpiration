@@ -132,7 +132,7 @@ var calculator = {};
 		series: {
 			lines: {
 				show:	true,
-				fill: 0.8,
+				fill: 1,
 				lineWidth: 0
 			},
 			stack: true
