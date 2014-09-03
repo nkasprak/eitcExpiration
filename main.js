@@ -177,16 +177,25 @@ var calcInterface = {
 				return ease1(ease1(x));
 			}
 		}
-		$(calcInterface.theChart).css("cursor","default");
+		$(calcInterface.theChart).css("cursor","col-resize");
 		calcInterface.thePlot.setData(calcInterface.chartData);
 		axes.yaxis.min = calcInterface.animation.oldYMin;
 		axes.xaxis.max = calcInterface.animation.oldXMax;
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
-		$("#labelOverlay, #lineOverlay").hide();
+		$("#labelOverlay, #lineOverlay, #lossOverlay").hide();
 		setTimeout(function() {
 			calcInterface.animation.animationTimer = setInterval(calcInterface.chartFrame,30)
 		},50);
+	},
+	
+	wrapperMouseMoveFunction: function(e) {
+		var offset = $("#flotChart").offset();
+		var axes = calcInterface.thePlot.getAxes();
+		var pointOffset = calcInterface.thePlot.pointOffset({x:0,y:0});
+		var x = axes.xaxis.c2p(e.pageX - offset.left - pointOffset.left);
+		var y = axes.yaxis.c2p(e.pageY - offset.top - pointOffset.top);
+		calcInterface.plotHoverFunction(null,{x:x,y:y});
 	},
 	
 	chartFrame: function() {
@@ -203,7 +212,7 @@ var calcInterface = {
 			clearTimeout(a.animationTimer);
 			a.active = false;
 			$(calcInterface.theChart).css("cursor","pointer");
-			$("#labelOverlay, #lineOverlay").show();
+			$("#labelOverlay, #lineOverlay, #lossOverlay").show();
 			a.onCompleteFunction(a.onCompleteArgs);	
 		}
 	},
@@ -241,11 +250,13 @@ var calcInterface = {
 		}
 		var yZero = (calcInterface.thePlot.pointOffset({x:0,y:0}).top)/calcInterface.theChart.height();
 		$("#lineOverlay").css("top",yZero*100/bMarg + "%").css("height",(.98-yZero)*100 + "%").css("left",(leftPercent*100) + "%");
-		$("#labelOverlay").css("width", (calcInterface.labelWidth*2) + "px");
+		/*$("#labelOverlay").css("width", (calcInterface.labelWidth*2) + "px");*/
 		if (leftPercent > 0.6) {
 			$("#labelOverlay, #lossOverlay").css("left","").css("textAlign","right").css("right",(1-leftPercent)*100 + "%");
+			$("#lossOverlay .circle").css({"right":"-6px","left":""});
 		} else {
 			$("#labelOverlay, #lossOverlay").css("right","").css("textAlign","left").css("left",(leftPercent)*100 + "%");
+			$("#lossOverlay .circle").css({"right":"0px","left":"-6px"});
 		}
 	},
 	mouseIsDown: false,
@@ -283,11 +294,11 @@ $(document).ready(function() {
 	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
 	$(document).on("mousedown",function(e) {
-		calcInterface.theChart.bind("plothover",calcInterface.plotHoverFunction);
+		$("#chartWrapper").on("mousemove",calcInterface.wrapperMouseMoveFunction);
 		calcInterface.mouseIsDown = true;
 	});
 	$(document).on("mouseup",function(e) {
-		calcInterface.theChart.unbind("plothover",calcInterface.plotHoverFunction);
+		$("#chartWrapper").unbind("mousemove",calcInterface.wrapperMouseMoveFunction);
 		calcInterface.mouseIsDown = false;
 	});
 	
@@ -333,17 +344,9 @@ $(document).ready(function() {
 	$("#children_input").trigger("change");
 	calcInterface.updateWageAmount($("#wage_input").val());
 	
-	calcInterface.labelWidth = $("#labelOverlay").width();
+	//calcInterface.labelWidth = $("#labelOverlay").width();
 	
-	$("#lossOverlayAmount").on("mousemove", function(e) {
-		
-		var offset = $("#flotChart").offset();
-		var axes = calcInterface.thePlot.getAxes();
-		var pointOffset = calcInterface.thePlot.pointOffset({x:0,y:0});
-		var x = axes.xaxis.c2p(e.pageX - offset.left - pointOffset.left);
-		var y = axes.yaxis.c2p(e.pageY - offset.top - pointOffset.top);
-		calcInterface.plotHoverFunction(null,{x:x,y:y});
-	});
+	$("#chartSurrounder").on("mousemove",calcInterface.wrapperMouseMoveFunction);
 	
 	
 	
@@ -351,7 +354,7 @@ $(document).ready(function() {
 		calcInterface.theChart.css("height",0.6*$("#flotChart").width());
 		$("#chartSurrounder").height(calcInterface.theChart.height()*calculator.parms.bottomMargin);
 		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/20,12) + "px");
-		calcInterface.setLabelPosition($("#wage_input").val());
+		calcInterface.updateWageAmount($("#wage_input").val());
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
 	});

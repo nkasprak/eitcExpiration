@@ -128,7 +128,7 @@ var calculator = {};
 		else return "$" + calcInterface.addCommas(val/1000) + "K";	
 	};
 	
-	p.bottomMargin = 1.1;
+	p.bottomMargin = 1.05;
 	
 	p.chartOptions = {
 		series: {
