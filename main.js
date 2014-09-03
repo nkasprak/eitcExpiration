@@ -177,7 +177,7 @@ var calcInterface = {
 				return ease1(ease1(x));
 			}
 		}
-		$(calcInterface.theChart).css("cursor","col-resize");
+		$(calcInterface.theChart).css("cursor","default");
 		calcInterface.thePlot.setData(calcInterface.chartData);
 		axes.yaxis.min = calcInterface.animation.oldYMin;
 		axes.xaxis.max = calcInterface.animation.oldXMax;
@@ -211,7 +211,7 @@ var calcInterface = {
 		if (a.animationFrame > a.numFrames) {
 			clearTimeout(a.animationTimer);
 			a.active = false;
-			$(calcInterface.theChart).css("cursor","pointer");
+			$(calcInterface.theChart).css("cursor","col-resize");
 			$("#labelOverlay, #lineOverlay, #lossOverlay").show();
 			a.onCompleteFunction(a.onCompleteArgs);	
 		}
