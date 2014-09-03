@@ -128,6 +128,18 @@ var calculator = {};
 		else return "$" + calcInterface.addCommas(val/1000) + "K";	
 	};
 	
+	p.events = {};
+	
+	if ("ontouchstart" in window) {
+		p.events.down = "touchstart";
+		p.events.up = "touchend";
+		p.events.move = "touchmove";
+	} else {
+		p.events.down = "mousedown";
+		p.events.up = "mouseup";
+		p.events.move = "mousemove";	
+	}
+	
 	p.bottomMargin = 1.05;
 	
 	p.chartOptions = {

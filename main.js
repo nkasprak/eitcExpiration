@@ -190,6 +190,7 @@ var calcInterface = {
 	},
 	
 	wrapperMouseMoveFunction: function(e) {
+		if (e.type=="touchmove") e = e.originalEvent.touches[0];
 		var offset = $("#flotChart").offset();
 		var axes = calcInterface.thePlot.getAxes();
 		var pointOffset = calcInterface.thePlot.pointOffset({x:0,y:0});
@@ -293,12 +294,13 @@ $(document).ready(function() {
 	
 	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
 	
-	$(document).on("mousedown",function(e) {
-		$("#chartWrapper").on("mousemove",calcInterface.wrapperMouseMoveFunction);
+	var ev = calculator.parms.events;
+	$(document).on(ev.down,function(e) {
+		$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
 		calcInterface.mouseIsDown = true;
 	});
-	$(document).on("mouseup",function(e) {
-		$("#chartWrapper").unbind("mousemove",calcInterface.wrapperMouseMoveFunction);
+	$(document).on(ev.up,function(e) {
+		$("#chartSurrounder").off(ev.move,calcInterface.wrapperMouseMoveFunction);
 		calcInterface.mouseIsDown = false;
 	});
 	
@@ -346,7 +348,7 @@ $(document).ready(function() {
 	
 	//calcInterface.labelWidth = $("#labelOverlay").width();
 	
-	$("#chartSurrounder").on("mousemove",calcInterface.wrapperMouseMoveFunction);
+	//$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
 	
 	
 	
