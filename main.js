@@ -232,8 +232,8 @@ var calcInterface = {
 	
 	updateWageAmount: function(wages) {
 		var theMax = calcInterface.thePlot.getAxes().xaxis.max;
-		if (wages < 0) wages = 0;
-		if (wages > theMax) wages = theMax;
+		if (wages < 0) wages = Math.round(0);
+		if (wages > theMax) wages = Math.round(theMax);
 		calcInterface.setInput("wage_input",wages);
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();
