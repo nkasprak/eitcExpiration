@@ -7,7 +7,16 @@ body {
 }
 
 h1,h2,h3,h4,h5,h6 {
-	margin:0px;padding:0px;	
+	margin:0px;padding:0px;
+	line-height:100%;
+}
+
+h1,h2 {
+	font-weight:bold;
+}
+
+h3,h4,h5,h6 {
+	font-weight:600;	
 }
 
 b, strong {
@@ -90,11 +99,12 @@ input, select {
 
 #lossOverlay{
 	position:absolute;	
+	z-index:100;
 }
 
 #lossOverlay .circle{
 	position:absolute;
-	top:-6px;
+	top:-12px;
 }
 
 #lossOverlay .subDiv {
@@ -127,6 +137,48 @@ input, select {
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	
 }
 
+div.credits {
+	margin-left:20px;
+	font-family:"myriad-pro";	
+}
+
+div.credits p {
+	font-size:12px;
+	padding:0em;
+	margin:0em;
+}
+
+a {
+	color:#0081a4;
+	text-decoration:none;	
+}
+
+a:hover {
+	text-decoration:underline;	
+}
+
+p.embedLink {
+	color:#0081a4;
+	clear:both;
+	cursor:pointer;
+}
+
+p.embedLink:hover {
+	text-decoration:underline;
+}
+
+div.embedCode {
+	display:none;	
+}
+
+div.embedCodeArea {
+	font-family:"Courier New", Courier, monospace;
+	border:1px solid #000;
+	background-color:#fff;
+	font-size:12px;
+	padding:5px;
+}
+
 @media (max-width:520px) {
 	#inputsWrapper, #outputsWrapper {
 		float:none;
@@ -134,7 +186,7 @@ input, select {
 		margin-left:auto;
 		margin-right:auto;	
 		top:0px;
-		max-width:260px;
+		max-width:300px;
 	}
 	#inputsWrapper table, #outputsWrapper table{
 		width:100%;

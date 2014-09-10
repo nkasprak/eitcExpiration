@@ -278,116 +278,144 @@ var calcInterface = {
 	}
 };
 
-
-$(document).ready(function() {
+Typekit.load({
+	loading: function() {
+		console.log("loading");	
+	},
 	
-	calcInterface.theChart = $("#flotChart");
-	calcInterface.theChart.find().addBack().on("selectstart",function(e) {
-		e.preventDefault();
-	});
-	calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+	active: function() {
+		console.log("active");
+	},
 	
-	calculator.parms.chartOptions.colors = [];
-	calculator.parms.chartOptions.colors[1] = $("#outputsWrapper .thirdChildTier .legendLabel").css("backgroundColor");
-	calculator.parms.chartOptions.colors[2] = $("#outputsWrapper .marriagePenalty .legendLabel").css("backgroundColor");
-	calculator.parms.chartOptions.colors[0] = $("#outputsWrapper .ctc .legendLabel").css("backgroundColor");
-	
-	calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
-	
-	var ev = calculator.parms.events;
-	$(document).on(ev.down,function(e) {
-		$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
-		calcInterface.mouseIsDown = true;
-	});
-	$(document).on(ev.up,function(e) {
-		$("#chartSurrounder").off(ev.move,calcInterface.wrapperMouseMoveFunction);
-		calcInterface.mouseIsDown = false;
-	});
-	
-	$("table#inputs #wage_input").change(function() {
-		var cleanValue = calcInterface.cleanInput($(this).val());
-		$(this).val(cleanValue);
-		calcInterface.updateWageAmount(cleanValue);
-	});
-	
-	$("table#inputs :input").change(function() {
-		calcInterface.changeInput();
-
-	});
-	
-	$("table#inputs select").change(function() {
-		calcInterface.updateChart();
-	});
-	
-	$("table#inputs select#children_input").change(function() {
-		if ($(this).val() > 0) {
-			if ($("table#inputs select#fs_input").val() == 0) {
-				$("table#inputs select#fs_input").val(2);	
-			}
-			$("table#inputs select#fs_input").children("option").first().attr("disabled","disabled");
-			$("table#inputs select#fs_input").children("option").eq(2).removeAttr("disabled");
-		} else {
-			if ($("table#inputs select#fs_input").val() == 2) {
-				$("table#inputs select#fs_input").val(0);	
-			}
-			$("table#inputs select#fs_input").children("option").first().removeAttr("disabled");
-			$("table#inputs select#fs_input").children("option").eq(2).attr("disabled","disabled");
-		}
-	});
-	
-	$("table#inputs select#fs_input").change(function() {
-		if ($(this).val() == 2) {
-			if ($("table#inputs select#children_input").val() == 0) {
-				$("table#inputs select#children_input").val(1);	
-			}
-		}
-	});
-	
-	$("#children_input").trigger("change");
-	calcInterface.updateWageAmount($("#wage_input").val());
-	
-	//calcInterface.labelWidth = $("#labelOverlay").width();
-	
-	//$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
-	
-	
-	
-	$(window).resize(function() {
-		calcInterface.theChart.css("height",0.6*$("#flotChart").width());
-		$("#chartSurrounder").height(calcInterface.theChart.height()*calculator.parms.bottomMargin);
-		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/10,16) + "px");
-		calcInterface.updateWageAmount($("#wage_input").val());
-		calcInterface.thePlot.setupGrid();
-		calcInterface.thePlot.draw();
-	});
-	
-	$("#animationMode").change(function() {
-		var p = calculator.parms;
-		p.animateAxes = false;
-		p.variableChartAxes = true;
-		p.maintainAspectRatio = false;
-		$("#children_input").val(3);
-		$("#fs_input").val(1);
-		$("#children_input").trigger("change");
-		var val = $(this).val();
-		switch (val) {
-			case "static":
-				p.variableChartAxes = false;
-				p.animateAxes = false;
-			break;
-			case "free":
-				p.variableChartAxes = true;
-				p.animateAxes = true;
-				p.maintainAspectRatio = false;
-			break;
-			case "fixed":
-				p.variableChartAxes = true;
-				p.animateAxes = true;
-				p.maintainAspectRatio = true;
-			break;
-		}
-	});
-	$("#animationMode").trigger("change");
-	$(window).trigger("resize");
-	
+	inactive: function() {
+		console.log("inactive");
+	}
 });
+
+
+		$(window).on("load",function() {		
+			
+			calcInterface.theChart = $("#flotChart");
+			calcInterface.theChart.find().addBack().on("selectstart",function(e) {
+				e.preventDefault();
+			});
+			calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+			
+			calculator.parms.chartOptions.colors = [];
+			calculator.parms.chartOptions.colors[1] = $("#outputsWrapper .thirdChildTier .legendLabel").css("backgroundColor");
+			calculator.parms.chartOptions.colors[2] = $("#outputsWrapper .marriagePenalty .legendLabel").css("backgroundColor");
+			calculator.parms.chartOptions.colors[0] = $("#outputsWrapper .ctc .legendLabel").css("backgroundColor");
+			
+			calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
+			
+			var ev = calculator.parms.events;
+			$(document).on(ev.down,function(e) {
+				$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
+				calcInterface.mouseIsDown = true;
+			});
+			$(document).on(ev.up,function(e) {
+				$("#chartSurrounder").off(ev.move,calcInterface.wrapperMouseMoveFunction);
+				calcInterface.mouseIsDown = false;
+			});
+			
+			$("table#inputs #wage_input").change(function() {
+				var cleanValue = calcInterface.cleanInput($(this).val());
+				$(this).val(cleanValue);
+				calcInterface.updateWageAmount(cleanValue);
+			});
+			
+			$("table#inputs :input").change(function() {
+				calcInterface.changeInput();
+		
+			});
+			
+			$("table#inputs select").change(function() {
+				calcInterface.updateChart();
+			});
+			
+			$("table#inputs select#children_input").change(function() {
+				if ($(this).val() > 0) {
+					if ($("table#inputs select#fs_input").val() == 0) {
+						$("table#inputs select#fs_input").val(2);	
+					}
+					$("table#inputs select#fs_input").children("option").first().attr("disabled","disabled");
+					$("table#inputs select#fs_input").children("option").eq(2).removeAttr("disabled");
+				} else {
+					if ($("table#inputs select#fs_input").val() == 2) {
+						$("table#inputs select#fs_input").val(0);	
+					}
+					$("table#inputs select#fs_input").children("option").first().removeAttr("disabled");
+					$("table#inputs select#fs_input").children("option").eq(2).attr("disabled","disabled");
+				}
+			});
+			
+			$("table#inputs select#fs_input").change(function() {
+				if ($(this).val() == 2) {
+					if ($("table#inputs select#children_input").val() == 0) {
+						$("table#inputs select#children_input").val(1);	
+					}
+				}
+			});
+			
+			$("#children_input").trigger("change");
+			calcInterface.updateWageAmount($("#wage_input").val());
+			
+			//calcInterface.labelWidth = $("#labelOverlay").width();
+			
+			//$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
+			
+			
+			
+			$(window).resize(function() {
+				
+				calcInterface.theChart.css("height",0.6*$("#flotChart").width());
+				$("#chartSurrounder").height(calcInterface.theChart.height()*calculator.parms.bottomMargin);
+				$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/10,16) + "px");
+				calcInterface.updateWageAmount($("#wage_input").val());
+				calcInterface.thePlot.setupGrid();
+				calcInterface.thePlot.draw();
+			});
+			
+			$("#animationMode").change(function() {
+				var p = calculator.parms;
+				p.animateAxes = false;
+				p.variableChartAxes = true;
+				p.maintainAspectRatio = false;
+				$("#children_input").val(3);
+				$("#fs_input").val(1);
+				$("#children_input").trigger("change");
+				var val = $(this).val();
+				switch (val) {
+					case "static":
+						p.variableChartAxes = false;
+						p.animateAxes = false;
+					break;
+					case "free":
+						p.variableChartAxes = true;
+						p.animateAxes = true;
+						p.maintainAspectRatio = false;
+					break;
+					case "fixed":
+						p.variableChartAxes = true;
+						p.animateAxes = true;
+						p.maintainAspectRatio = true;
+					break;
+				}
+			});
+			$("#animationMode").trigger("change");
+			
+			$("p.embedLink").click(function() {
+				if ($("div.embedCode").is(":visible")) {
+					$("div.embedCode").slideUp(200);
+				} else {
+					$("div.embedCode").slideDown(200);	
+				}
+			});
+			
+			$("span.embedDomain").html(window.location.host);
+			$(window).trigger("resize");
+			setTimeout(function() {
+				$(window).trigger("resize")
+			},2);
+		});
+	
