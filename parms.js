@@ -164,11 +164,6 @@ var calculator = {};
 					color: "#000",
 					lineWidth: 2,
 					yaxis: { from: 0, to: 0}
-				},
-				{
-					color: "#000",
-					lineWidth: 2,
-					xaxis: { from: 0, to: 0}
 				}
 			]
 		},
@@ -192,9 +187,9 @@ var calculator = {};
 		yaxis: {
 			/*min:-3000,*/
 			max:0,
-			tickLength:10,
-			color:"#444",
-			tickColor:"#444"	,
+			/*tickLength:10,*/
+			color:"#fff",
+			tickColor:"#ccc"	,
 			tickFormatter:p.tickFormatFunction,
 			axisLabel: "Loss in Credits"
 		},
