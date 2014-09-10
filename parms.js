@@ -161,9 +161,9 @@ var calculator = {};
 			borderWidth:0,
 			markings: [
 				{
-					color: "#000",
-					lineWidth: 2,
-					yaxis: { from: 0, to: 0}
+					color: "#999",
+					lineWidth: 4,
+					yaxis: { from: -1, to: -1}
 				}
 			]
 		},
@@ -173,7 +173,7 @@ var calculator = {};
 		},
 		
 		xaxis: {
-			min:0,
+			min:1,
 			/*max:57000	,*/
 			tickLength:10,
 			position:"top",
@@ -186,7 +186,7 @@ var calculator = {};
 		
 		yaxis: {
 			/*min:-3000,*/
-			max:0,
+			max:-1,
 			/*tickLength:10,*/
 			color:"#fff",
 			tickColor:"#ccc"	,

@@ -355,7 +355,7 @@ $(document).ready(function() {
 	$(window).resize(function() {
 		calcInterface.theChart.css("height",0.6*$("#flotChart").width());
 		$("#chartSurrounder").height(calcInterface.theChart.height()*calculator.parms.bottomMargin);
-		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/20,12) + "px");
+		$("#flotChart .flot-tick-label").css("font-size",Math.min(calcInterface.theChart.height()/10,16) + "px");
 		calcInterface.updateWageAmount($("#wage_input").val());
 		calcInterface.thePlot.setupGrid();
 		calcInterface.thePlot.draw();

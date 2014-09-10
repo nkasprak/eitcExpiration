@@ -2,21 +2,30 @@
 /* CSS Document */
 
 
-body, input, select {
-	font-family:'Droid Sans',Arial, Helvetica, sans-serif;
+body {
+	font-size:18px;
 }
 
+h1,h2,h3,h4,h5,h6 {
+	margin:0px;padding:0px;	
+}
 
+b, strong {
+	font-weight:600;
+}
+
+input, select {
+	font-size:16px;	
+}
 
 .wrapper {
-	max-width:650px;
+	max-width:525px;
 	min-width:340px;	
 	width:100%;
-	
 }
 
 #restWrapper {
-	font-size:12px;
+	font-size:16px;
 	margin:10px;
 	background-color:#eee;	
 	padding:10px;
@@ -26,15 +35,18 @@ body, input, select {
 #inputsWrapper {
 	position:relative;	
 	float:left;
-	width:45%;
+	width:37%;
 	top:20px;
 }
 
 #outputsWrapper {
 	float:right;
 	margin-left:2%;
-	width:45%;
+	width:56%;
+	max-width:260px;
 }
+
+
 
 #outputsWrapper .legendLabel {
 	width:30px;
@@ -87,8 +99,8 @@ body, input, select {
 
 #lossOverlay .subDiv {
 	position:relative;
-	font-weight:bold;
-	font-size:16px;
+	font-weight:600;
+	font-size:20px;
 	color:#fff;
 	opacity:0.8;
 	background-color:#0081a4;
@@ -115,13 +127,14 @@ body, input, select {
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	
 }
 
-@media (max-width:500px) {
+@media (max-width:520px) {
 	#inputsWrapper, #outputsWrapper {
 		float:none;
 		width:80%;
 		margin-left:auto;
 		margin-right:auto;	
 		top:0px;
+		max-width:260px;
 	}
 	#inputsWrapper table, #outputsWrapper table{
 		width:100%;
