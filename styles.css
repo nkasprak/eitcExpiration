@@ -167,6 +167,7 @@ div.embedCode {
 
 	left:20px;
 	width:92%;
+	max-width:525px;
 	background-color:#fff;
 }
 
