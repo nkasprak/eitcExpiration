@@ -278,21 +278,6 @@ var calcInterface = {
 	}
 };
 
-Typekit.load({
-	loading: function() {
-		console.log("loading");	
-	},
-	
-	active: function() {
-		console.log("active");
-	},
-	
-	inactive: function() {
-		console.log("inactive");
-	}
-});
-
-
 		$(window).on("load",function() {		
 			
 			calcInterface.theChart = $("#flotChart");
@@ -359,12 +344,7 @@ Typekit.load({
 			
 			$("#children_input").trigger("change");
 			calcInterface.updateWageAmount($("#wage_input").val());
-			
-			//calcInterface.labelWidth = $("#labelOverlay").width();
-			
-			//$("#chartSurrounder").on(ev.move,calcInterface.wrapperMouseMoveFunction);
-			
-			
+				
 			
 			$(window).resize(function() {
 				
@@ -404,15 +384,15 @@ Typekit.load({
 			});
 			$("#animationMode").trigger("change");
 			
-			$("p.embedLink").click(function() {
+			$(".embedLink").click(function() {
 				if ($("div.embedCode").is(":visible")) {
-					$("div.embedCode").slideUp(200);
+					$("div.embedCode").fadeOut(200);
 				} else {
-					$("div.embedCode").slideDown(200);	
+					$("div.embedCode").fadeIn(200);	
 				}
 			});
 			
-			$("span.embedDomain").html(window.location.host);
+			$("span.embedDomain").html(document.URL);
 			$(window).trigger("resize");
 			setTimeout(function() {
 				$(window).trigger("resize")

@@ -174,7 +174,6 @@ var calculator = {};
 		
 		xaxis: {
 			min:1,
-			/*max:57000	,*/
 			tickLength:10,
 			position:"top",
 			color:"#444",
@@ -185,9 +184,7 @@ var calculator = {};
 		},
 		
 		yaxis: {
-			/*min:-3000,*/
 			max:-1,
-			/*tickLength:10,*/
 			color:"#fff",
 			tickColor:"#ccc"	,
 			tickFormatter:p.tickFormatFunction,
@@ -199,13 +196,6 @@ var calculator = {};
 			labelBoxBorderColor:"#fff",
 			show:false
 		}
-		
-		/*colors: [
-			"#eb9123",	
-			"#0c61a4",
-			"#003768"
-		]*/
-		
 	}
 	
 	c.parms = p;

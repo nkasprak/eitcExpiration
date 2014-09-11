@@ -4,6 +4,7 @@
 
 body {
 	font-size:18px;
+	background-color:#fff;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -88,15 +89,6 @@ input, select {
 	position:relative;
 }
 
-/*#labelOverlay {
-	position:absolute;
-	font-weight:bold;
-	font-size:10px;
-	color:#0081a4;
-	bottom:3%;
-	width:auto;
-}*/
-
 #lossOverlay{
 	position:absolute;	
 	z-index:100;
@@ -157,18 +149,25 @@ a:hover {
 	text-decoration:underline;	
 }
 
-p.embedLink {
+.embedLink {
 	color:#0081a4;
 	clear:both;
 	cursor:pointer;
 }
 
-p.embedLink:hover {
+.embedLink:hover {
 	text-decoration:underline;
 }
 
 div.embedCode {
 	display:none;	
+	position:absolute;
+	height:3em;
+	top:560px;
+
+	left:20px;
+	width:92%;
+	background-color:#fff;
 }
 
 div.embedCodeArea {
