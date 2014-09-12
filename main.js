@@ -392,6 +392,18 @@ var calcInterface = {
 				}
 			});
 			
+			$("#outputsWrapper .ctc span").qtip({
+				content:{
+					text:'The refundable portion (the amount available even when there is no tax liability to reduce) of the child tax credit phases in based on income. The 2009 Recovery Act significantly lowered the income level where this phase-in starts; this provision expires at the end of 2017.'},
+					style:{classes:'explanatoryTip'},
+					position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}
+			});
+			
+			$("#outputsWrapper .thirdChildTier span").qtip({content:{text:'The EITC is calculated based on a formula that depends on wage income, tax filing status, and number of children. Prior to the 2009 Recovery Act, there were three separate tiers - for zero, one, and two or more children. The Recovery Act added a fourth tier for three or more children. This provision expires at the end of 2017.'},style:{classes:'explanatoryTip',target:"mouse"},
+					position:{at:"top left",my:"bottom right",viewport:$(window)}});
+			
+			$("#outputsWrapper .marriagePenalty span").qtip({content:{text:'Because the EITC phases out based on wage income, a penalty can result when two wage earners get married and combine their incomes. This effect is partially offset because the phase-out begins at a higher income level for married filers. The 2009 Recovery Act increased this differential, and that increase expires at the end of 2017.'},style:{classes:'explanatoryTip'},position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}});
+			
 			$("span.embedDomain").html(document.URL);
 			$(window).trigger("resize");
 			setTimeout(function() {

@@ -43,6 +43,11 @@ input, select {
 	box-shadow: 5px 5px 5px #ddd;
 }
 
+#howTo {
+	font-family:"myriad-pro",sans-serif;
+	font-size:12px;	
+}
+
 #inputsWrapper {
 	position:relative;	
 	float:left;
@@ -132,7 +137,8 @@ input, select {
 
 div.credits {
 	margin-left:20px;
-	font-family:"myriad-pro";	
+	font-family:"myriad-pro";
+	position:relative;	
 }
 
 div.credits p {
@@ -164,9 +170,9 @@ div.embedCode {
 	display:none;	
 	position:absolute;
 	height:3em;
-	top:560px;
+	bottom:50px;
 
-	left:20px;
+	left:0px;
 	width:92%;
 	max-width:525px;
 	background-color:#fff;
@@ -180,6 +186,13 @@ div.embedCodeArea {
 	padding:5px;
 }
 
+.explanatoryTip {
+	font-family:"myriad-pro",sans-serif;
+	font-size:12px;	
+	background-color:#fff;
+	border-color:#0081a4;
+}
+
 @media (max-width:520px) {
 	#inputsWrapper, #outputsWrapper {
 		float:none;
@@ -191,5 +204,11 @@ div.embedCodeArea {
 	}
 	#inputsWrapper table, #outputsWrapper table{
 		width:100%;
+	}
+	#howTo {
+		width:80%;
+		margin-left:auto;
+		margin-right:auto;
+		margin-bottom:1em;
 	}
 }
