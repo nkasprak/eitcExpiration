@@ -45,6 +45,7 @@ input, select {
 	margin:10px;
 	background-color:#eee;	
 	padding:10px;
+	margin-top:20px;
 	box-shadow: 5px 5px 5px #ddd;
 }
 
@@ -58,6 +59,10 @@ input, select {
 	float:left;
 	width:37%;
 	top:20px;
+}
+
+#inputs td {
+	line-height:100%;	
 }
 
 #outputsWrapper {
@@ -139,7 +144,7 @@ input, select {
 }
 
 div.credits {
-	margin-left:20px;
+	margin-left:10px;
 	font-family:"myriad-pro";
 	position:relative;	
 }
@@ -148,6 +153,15 @@ div.credits p {
 	font-size:12px;
 	padding:0em;
 	margin:0em;
+}
+
+#cbppCredit {
+	border-top:1px solid #aaa;
+	font-size:12px;	
+	margin-top:5px;
+	padding-top:3px;
+	text-align:right;
+	color:#0081a4;
 }
 
 a {
@@ -172,21 +186,24 @@ a:hover {
 div.embedCode {
 	display:none;	
 	position:absolute;
-	height:3em;
+	height:4em;
 	bottom:50px;
-
+	border:1px solid #000;
+	z-index:100;
 	left:0px;
 	width:92%;
 	max-width:525px;
 	background-color:#fff;
+	padding:5px;
 }
 
 div.embedCodeArea {
 	font-family:"Courier New", Courier, monospace;
-	border:1px solid #000;
+	position:relative;
+	top:10px;
 	background-color:#fff;
 	font-size:12px;
-	padding:5px;
+	
 }
 
 .explanatoryTip {
@@ -213,5 +230,8 @@ div.embedCodeArea {
 		margin-left:auto;
 		margin-right:auto;
 		margin-bottom:1em;
+	}
+	div.embedCode {
+		height:5em;	
 	}
 }
