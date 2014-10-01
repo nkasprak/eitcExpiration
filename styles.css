@@ -6,6 +6,8 @@ body {
 	font-size:18px;
 	background-color:#fff;
 	font-family:"myriad-pro-condensed",sans-serif;
+	padding:0px;
+	margin:0px;
 }
 
 select, input {
@@ -80,11 +82,11 @@ input, select {
 }
 
 #outputsWrapper .thirdChildTier .legendLabel {
-	background-color:#efa74f	 
+	background-color:#fed471	 
 }
 
 #outputsWrapper .marriagePenalty .legendLabel {
-	background-color:#fed471
+	background-color:#efa74f 
 }
 
 #outputsWrapper .ctc .legendLabel {

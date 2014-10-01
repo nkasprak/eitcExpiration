@@ -70,8 +70,8 @@ var calcInterface = {
 				ctc:	calculator.findActcChangeAmounts(theInputs)
 			}
 			data[0].data.push([wages,0-newYs.ctc]);
-			data[1].data.push([wages,0-newYs.eitc.lossFromEndOfThirdChildTier]);
-			data[2].data.push([wages,0-newYs.eitc.lossFromEndOfMPR]);
+			data[1].data.push([wages,0-newYs.eitc.lossFromEndOfMPR]);
+			data[2].data.push([wages,0-newYs.eitc.lossFromEndOfThirdChildTier]);
 			
 			for (i = 0;i<data.length;i++) {
 				data[i].data.sort(function(a,b) {return a[0]-b[0]})
@@ -112,8 +112,10 @@ var calcInterface = {
 		
 		dataObj = [
 			{ label: "Child Tax Credit", data: theData[2]},
-			{ label: "EITC 3 Child", data: theData[1]},
-			{ label: "EITC Marriage Penalty", data: theData[0]}
+			{ label: "EITC Marriage Penalty", data: theData[0]},
+			{ label: "EITC 3 Child", data: theData[1]}
+			
+			
 		];
 		
 		for (i=0;i<dataObj.length;i++) {
@@ -287,8 +289,8 @@ var calcInterface = {
 			calcInterface.theChart.css("height",0.6*$("#flotChart").width());
 			
 			calculator.parms.chartOptions.colors = [];
-			calculator.parms.chartOptions.colors[1] = $("#outputsWrapper .thirdChildTier .legendLabel").css("backgroundColor");
-			calculator.parms.chartOptions.colors[2] = $("#outputsWrapper .marriagePenalty .legendLabel").css("backgroundColor");
+			calculator.parms.chartOptions.colors[2] = $("#outputsWrapper .thirdChildTier .legendLabel").css("backgroundColor");
+			calculator.parms.chartOptions.colors[1] = $("#outputsWrapper .marriagePenalty .legendLabel").css("backgroundColor");
 			calculator.parms.chartOptions.colors[0] = $("#outputsWrapper .ctc .legendLabel").css("backgroundColor");
 			
 			calcInterface.theChart.bind("plotclick",calcInterface.plotClickFunction);
@@ -394,15 +396,15 @@ var calcInterface = {
 			
 			$("#outputsWrapper .ctc span").qtip({
 				content:{
-					text:'The refundable portion (the amount available even when there is no tax liability to reduce) of the child tax credit phases in based on income. The 2009 Recovery Act significantly lowered the income level where this phase-in starts; this provision expires at the end of 2017.'},
+					text:'The refundable portion (the amount available even when there is no tax liability to reduce) of the Child Tax Credit phases in based on income. The 2009 Recovery Act lowered the phase-in to begin at $3,000; this provision expires at the end of 2017.'},
 					style:{classes:'explanatoryTip'},
 					position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}
 			});
 			
-			$("#outputsWrapper .thirdChildTier span").qtip({content:{text:'The EITC is calculated based on a formula that depends on wage income, tax filing status, and number of children. Prior to the 2009 Recovery Act, there were three separate tiers - for zero, one, and two or more children. The Recovery Act added a fourth tier for three or more children. This provision expires at the end of 2017.'},style:{classes:'explanatoryTip',target:"mouse"},
+			$("#outputsWrapper .thirdChildTier span").qtip({content:{text:'The EITC’s formula depends partially on the family’s number of children.  Prior to the 2009 Recovery Act, there were separate tiers for zero, one, and two or more children. The Recovery Act added a fourth tier for three or more children.  This provision expires at the end of 2017.'},style:{classes:'explanatoryTip',target:"mouse"},
 					position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}});
 			
-			$("#outputsWrapper .marriagePenalty span").qtip({content:{text:'Because the EITC phases out based on wage income, a penalty can result when two wage earners get married and combine their incomes. This effect is partially offset because the phase-out begins at a higher income level for married filers. The 2009 Recovery Act increased this differential, and that increase expires at the end of 2017.'},style:{classes:'explanatoryTip'},position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}});
+			$("#outputsWrapper .marriagePenalty span").qtip({content:{text:'Because the EITC phases out based on wage income, a penalty can result when two wage earners marry and combine their incomes. This effect is partially offset because the phase-out begins at a higher income level for married filers. The 2009 Recovery Act increased this differential; that increase expires at the end of 2017.'},style:{classes:'explanatoryTip'},position:{at:"top left",my:"bottom right",target:"mouse",viewport:$(window)}});
 			
 			$("span.embedDomain").html(document.URL);
 			$(window).trigger("resize");
