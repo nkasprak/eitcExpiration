@@ -142,6 +142,9 @@ var calculator = {};
 	
 	p.bottomMargin = 1.05;
 	
+	p.defaultXMax = 22000;
+	p.defaultYMin = -1000;
+	
 	p.chartOptions = {
 		series: {
 			lines: {
