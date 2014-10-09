@@ -1,6 +1,6 @@
-// EITC calculator - 2018 expiration changes
-// by Nick Kasprak and Bryann DaSilva
-// CBPP
+/*EITC and Child Tax Credit Calculator: 2018 Expiration Changes
+by Nick Kasprak and Bryann DaSilva
+(c) 2014, Center on Budget and Policy Priorities.*/
 
 (function(c) {
 	c.eitcCalculator = function(theInputs, sConfig, smooth) { //Calculates EITC
