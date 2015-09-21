@@ -35,17 +35,19 @@ h1,h2 {
 }
 
 h3,h4,h5,h6 {
-	font-weight:600;	
+	font-weight:bold;	
 }
 
 b, strong {
-	font-weight:600;
+	font-weight:bold;
 }
 
 .wrapper {
 	max-width:580px;
 	min-width:340px;	
 	width:100%;
+	border-top:1px solid #000;
+	padding-top:10px;
 }
 
 #restWrapper {
@@ -125,7 +127,7 @@ b, strong {
 
 #lossOverlay .subDiv {
 	position:relative;
-	font-weight:600;
+	font-weight:bold;
 	font-size:20px;
 	color:#fff;
 	opacity:0.8;
@@ -166,7 +168,7 @@ div.credits p {
 }
 
 #cbppCredit, #cbppCredit a {
-	border-top:1px solid #aaa;
+	border-top:1px solid #000;
 	font-size:13px;	
 	margin-top:5px;
 	padding-top:3px;
