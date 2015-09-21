@@ -5,7 +5,7 @@
 body {
 	font-size:18px;
 	background-color:#fff;
-	font-family:"myriad-pro-condensed",sans-serif;
+	font-family:"proxima-nova",sans-serif;
 	padding:0px;
 	margin:0px;
 	-moz-text-size-adjust:none;
@@ -15,13 +15,19 @@ body {
 }
 
 select, input {
-	font-family:"myriad-pro-condensed",sans-serif;	
+	font-family:"proxima-nova-condensed",sans-serif;
+	font-size:15px;	
+}
+
+#restWrapper {
+	font-family:"proxima-nova-condensed",sans-serif;	
 }
 
 h1,h2,h3,h4,h5,h6 {
 	margin:0px;padding:0px;
 	margin-bottom:0.5em;
 	line-height:100%;
+	font-family:"proxima-nova",sans-serif;
 }
 
 h1,h2 {
@@ -36,12 +42,8 @@ b, strong {
 	font-weight:600;
 }
 
-input, select {
-	font-size:16px;	
-}
-
 .wrapper {
-	max-width:525px;
+	max-width:580px;
 	min-width:340px;	
 	width:100%;
 }
@@ -56,8 +58,8 @@ input, select {
 }
 
 #howTo {
-	font-family:"myriad-pro",sans-serif;
-	font-size:12px;	
+	font-family:"proxima-nova",sans-serif;
+	font-size:13px;	
 }
 
 #inputsWrapper {
@@ -65,6 +67,7 @@ input, select {
 	float:left;
 	width:37%;
 	top:20px;
+	font-size:15px;
 }
 
 #inputs td {
@@ -76,6 +79,7 @@ input, select {
 	margin-left:2%;
 	width:56%;
 	max-width:260px;
+	font-size:15px;
 }
 
 #outputsWrapper .legendLabel {
@@ -151,24 +155,25 @@ input, select {
 
 div.credits {
 	margin-left:10px;
-	font-family:"myriad-pro";
+	font-family:"proxima-nova";
 	position:relative;	
 }
 
 div.credits p {
-	font-size:12px;
+	font-size:13px;
 	padding:0em;
 	margin:0em;
 }
 
-#cbppCredit {
+#cbppCredit, #cbppCredit a {
 	border-top:1px solid #aaa;
-	font-size:12px;	
+	font-size:13px;	
 	margin-top:5px;
 	padding-top:3px;
 	text-align:right;
-	color:#0081a4;
+	color:#888888;
 	margin-right:3px;
+	text-transform:uppercase;
 }
 
 a {
@@ -214,7 +219,7 @@ div.embedCodeArea {
 }
 
 .explanatoryTip {
-	font-family:"myriad-pro",sans-serif;
+	font-family:"proxima-nova",sans-serif;
 	font-size:12px;	
 	background-color:#fff;
 	border-color:#0081a4;
